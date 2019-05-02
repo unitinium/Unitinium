@@ -1,0 +1,16 @@
+{
+  "name": "unitinium",
+  "displayName": "Unitinium",
+  "version": "1.0.0",
+  "description": "e2e test tool",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/k0dep/Unitinium.git"
+  },
+  "author": "Stanislav Petrov <sv.petrov@kodep.pro>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/k0dep/Unitinium/issues"
+  },
+  "homepage": "https://github.com/k0dep/Unitinium#readme"
+}
