@@ -12,5 +12,9 @@
   "bugs": {
     "url": "https://github.com/k0dep/Unitinium/issues"
   },
-  "homepage": "https://github.com/k0dep/Unitinium#readme"
+  "homepage": "https://github.com/k0dep/Unitinium#readme",
+  "dependencies": {
+    "moonsharp": "2.0.0",
+    "unity-json-rpc": "1.0.0"
+  }
 }

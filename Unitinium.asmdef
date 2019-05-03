@@ -1,3 +1,16 @@
-﻿{
-	"name": "Unitinium"
+{
+    "name": "Unitinium",
+    "references": [
+        "MoonSharp",
+        "UnityJsonRpc"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
 }
