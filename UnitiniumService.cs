@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using MoonSharp.Interpreter;
 using UnityEngine;
 using UnityJsonRpc;
 
@@ -11,15 +12,19 @@ namespace Unitinium
 
         private JsonRpcServer server;
         private ConcurrentQueue<JsonRpcRequest> requests;
-        private JsonRpcProcessor _processor;
-        private SceneDumpService _sceneDumpService;
+        public JsonRpcProcessor Processor { get; set; }
+        public SceneDumpService SceneDumpService { get; set; }
+        public IUnitiniumLuaRuntime LuaRuntime { get; set; }
 
         public void Awake()
         {
-            _sceneDumpService = new SceneDumpService();
+            SceneDumpService = new SceneDumpService();
 
-            _processor = new JsonRpcProcessor();
-            _processor.SetMethod("sceneDump", _sceneDumpService.DumpScenes);
+            Processor = new JsonRpcProcessor();
+            LuaRuntime = new DefaultUnitiniumLuaRuntime();
+
+            Processor.SetMethod("sceneDump", SceneDumpService.DumpScenes);
+            Processor.SetMethod("executeLua", (string script) => { LuaRuntime.Execute(script); return 0; });
             
             server = new JsonRpcServer();
             requests = server.Start("http://localhost:" + ListenPort + "/");
@@ -34,7 +39,7 @@ namespace Unitinium
 
             if (requests.TryDequeue(out var request))
             {
-                _processor.Handle(request);
+                Processor.Handle(request);
             }
         }
         
