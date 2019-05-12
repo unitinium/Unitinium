@@ -8,7 +8,7 @@ namespace Unitinium
 {
     public class UnitiniumService : MonoBehaviour
     {
-        public int ListenPort = 8080;
+        public int ListenPort = 15263;
 
         private JsonRpcServer server;
         private ConcurrentQueue<JsonRpcRequest> requests;
@@ -25,6 +25,7 @@ namespace Unitinium
 
             Processor.SetMethod("sceneDump", SceneDumpService.DumpScenes);
             Processor.SetMethod("executeLua", (string script) => { LuaRuntime.Execute(script); return 0; });
+            //Processor.SetMethod("getMethods", )
             
             server = new JsonRpcServer();
             requests = server.Start("http://localhost:" + ListenPort + "/");

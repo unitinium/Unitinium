@@ -1,0 +1,19 @@
+{
+    "name": "Unitinium.Tests",
+    "references": [
+        "GUID:383f154bd443b670280454a2c7f089ba"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}
