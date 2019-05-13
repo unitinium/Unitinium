@@ -1,33 +1,66 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
 
 namespace Unitinium.Tests
 {
     public class QueryLexerTests
     {
         [Test]
-        [TestCase("GameManager#Camera.fieldOfView", new object[] {"GameManager", "#", "Camera", ".", "fieldOfView"})]
-        [TestCase(@"Esc\a\\ping\#\.Test", new [] {@"Esca\ping#.Test"})]
-        [TestCase(@"GO[1]", new [] {@"GO", "[", "1", "]"})]
-        public void Parse_ShouldNormalParseText(string input, string[] output)
+        public void Parse_ShouldNormalParseText()
         {
             // Arrange
             var lexer = new QueryLexer();
+            var input = "GameManager#Camera.fieldOfView";
+            var output = new object[]
+            {
+                "GameManager", 
+                new QuerySpecialToken("#"),
+                "Camera",
+                new QuerySpecialToken("."),
+                "fieldOfView"
+            };
 
             // Act
-            var result = lexer.Parse(input);
+            var result = lexer.Tokenize(input);
 
             // Assert
-            Log(string.Join(", ", result));
             Assert.True(Enumerable.SequenceEqual(output, result));
         }
-
-        void Log(string message)
+        
+        [Test]
+        public void Parse_ShouldNormalParseText1()
         {
-            LogAssert.Expect(LogType.Log, message);
-            Debug.Log(message);
+            // Arrange
+            var lexer = new QueryLexer();
+            var input = @"GO[1]";
+            var output = new object[]
+            {
+                "GO",
+                new QuerySpecialToken("["),
+                1,
+                new QuerySpecialToken("]")
+            };
+
+            // Act
+            var result = lexer.Tokenize(input);
+
+            // Assert
+            Assert.True(Enumerable.SequenceEqual(output, result));
+        }
+        
+        [Test]
+        public void Parse_ShouldNormalParseText2()
+        {
+            // Arrange
+            var lexer = new QueryLexer();
+            var input = @"Esc\a\\ping\#\.Test";
+            var output = new object[] { @"Esca\ping#.Test" };
+
+            // Act
+            var result = lexer.Tokenize(input);
+
+            // Assert
+            Assert.True(Enumerable.SequenceEqual(output, result));
         }
     }
 }

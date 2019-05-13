@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Unitinium
 {
-    public class QueryLexer
+    public class QueryLexer : IQueryLexer
     {
-        public object[] Parse(string query)
+        public object[] Tokenize(string query)
         {
             if (string.IsNullOrEmpty(query))
             {
@@ -83,6 +83,16 @@ namespace Unitinium
         public QuerySpecialToken(string value)
         {
             Value = value;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is QuerySpecialToken token && token.Value.Equals(Value))
+            {
+                return true;
+            }
+            
+            return base.Equals(obj);
         }
     }
 }

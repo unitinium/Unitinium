@@ -1,14 +1,13 @@
-using System;
 using System.Collections.Generic;
 
 namespace Unitinium
 {
-    public class QueryGrammar
+    public class QueryParser : IQueryParser
     {
-        public QuerySyntaxTreeNode[] CreateSystaxTree(object[] tokens)
+        public QueryAstBase[] Parse(object[] tokens)
         {
             var tokenQueue = new Queue<object>(tokens);
-            var nodeList = new List<QuerySyntaxTreeNode>();
+            var nodeList = new List<QueryAstBase>();
 
             while (tokenQueue.Count > 0)
             {
@@ -32,7 +31,7 @@ namespace Unitinium
 
                 if (name != null)
                 {
-                    nodeList.Add(new QueryNameSyntaxTreeNode
+                    nodeList.Add(new QueryNameAst
                     {
                         Value = name
                     });
@@ -45,7 +44,7 @@ namespace Unitinium
             return nodeList.ToArray();
         }
 
-        private QuerySyntaxTreeNode ProcessOperator(QuerySpecialToken token, Queue<object> tokenQueue)
+        private QueryAstBase ProcessOperator(QuerySpecialToken token, Queue<object> tokenQueue)
         {
             if (token.Value == "$")
             {
@@ -59,7 +58,7 @@ namespace Unitinium
             
             if (token.Value == ".")
             {
-                return new QueryFirstExpandSyntaxTreeNode();
+                return new QueryFirstExpandAst();
             }
             
             if (token.Value == "[")
@@ -70,13 +69,13 @@ namespace Unitinium
             throw new QueryGrammarException($"Not expected operator {token.Value}");
         }
         
-        private QuerySyntaxTreeNode ProcessIndex(Queue<object> tokenQueue)
+        private QueryAstBase ProcessIndex(Queue<object> tokenQueue)
         {
             var intValue = Dequeue(tokenQueue, "number");
             var end = Dequeue(tokenQueue, "]");
             if (intValue is int && end is QuerySpecialToken endValue && endValue.Value == "]")
             {
-                return new QueryIndexSyntaxTreeNode
+                return new QueryIndexAst
                 {
                     Value = intValue
                 };
@@ -86,12 +85,12 @@ namespace Unitinium
         }
 
 
-        private QuerySyntaxTreeNode ProcessComponentFilter(Queue<object> tokenQueue)
+        private QueryAstBase ProcessComponentFilter(Queue<object> tokenQueue)
         {
             var name = Dequeue(tokenQueue, "identifier");
             if (name is string value)
             {
-                return new QueryComponentSyntaxTreeNode()
+                return new QueryComponentAst()
                 {
                     Value = value
                 };
@@ -100,12 +99,12 @@ namespace Unitinium
             throw new QueryGrammarException($"Expected identifier after # operator");
         }
 
-        private QuerySyntaxTreeNode ProcessGlobaFilter(Queue<object> tokenQueue)
+        private QueryAstBase ProcessGlobaFilter(Queue<object> tokenQueue)
         {
             var name = tokenQueue.Dequeue();
             if (name is string | name is int)
             {
-                return new QueryGlobalSyntaxTreeNode
+                return new QueryGlobalAst
                 {
                     Value = name
                 };
