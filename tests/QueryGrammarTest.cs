@@ -82,6 +82,31 @@ namespace Unitinium.Tests
         }
 
         [Test]
+        public void CreateSystaxTree_CorrectSequence2()
+        {
+            // Arrange
+            var grammar = new QueryParser();
+            var tokens = new object[]
+            {
+                new QuerySpecialToken("@"),
+                "query1",
+                new QuerySpecialToken("@"),
+                "query2"
+            };
+            var expected = new QueryAstBase[]
+            {
+                new QueryNameAst{Value = "query1"},
+                new QueryNameAst {Value = "query2"}
+            };
+            
+            // Act
+            var result = grammar.Parse(tokens);
+            
+            // Assert
+            Assert.True(Enumerable.SequenceEqual(result, expected));
+        }
+
+        [Test]
         public void CreateSystaxTree_NotCorrectSequence()
         {
             // Arrange

@@ -39,6 +39,7 @@ namespace Unitinium
                         break;
                     
                     case '#':
+                    case '@':
                     case '.':
                     case '[':
                     case ']':

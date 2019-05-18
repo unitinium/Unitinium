@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Unitinium
@@ -65,10 +66,29 @@ namespace Unitinium
             {
                 return ProcessIndex(tokenQueue);
             }
+
+            if (token.Value == "@")
+            {
+                return ProcessName(tokenQueue);
+            }
             
             throw new QueryGrammarException($"Not expected operator {token.Value}");
         }
-        
+
+        private QueryAstBase ProcessName(Queue<object> tokenQueue)
+        {
+            var name = tokenQueue.Dequeue();
+            if (name is string | name is int)
+            {
+                return new QueryNameAst
+                {
+                    Value = name
+                };
+            }
+
+            throw new QueryGrammarException($"Expected identifier after @ operator");
+        }
+
         private QueryAstBase ProcessIndex(Queue<object> tokenQueue)
         {
             var intValue = Dequeue(tokenQueue, "number");

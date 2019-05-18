@@ -4,19 +4,22 @@ using UnityEngine.SceneManagement;
 
 namespace Unitinium
 {
-    public class SceneQueryService
+    public class SceneQueryService : IQueryService
     {
         public IQueryLexer Lexer { get; set; }
         public IQueryParser Parser { get; set; }
         public IDictionary<Type, IQueryAstVisitor> Visitors { get; set; }
+        public IRuntimeObjectWrapperService Wrapper { get; set; }
         public object DefaultGlobalObject { get; set; }
 
         public SceneQueryService(IQueryLexer lexer, IQueryParser parser, 
-            IDictionary<Type, IQueryAstVisitor> visitors, object defaultGlobalObject)
+            IDictionary<Type, IQueryAstVisitor> visitors, IRuntimeObjectWrapperService wrapper,
+            object defaultGlobalObject)
         {
             Lexer = lexer;
             Parser = parser;
             Visitors = visitors;
+            Wrapper = wrapper;
             DefaultGlobalObject = defaultGlobalObject;
         }
 
@@ -24,12 +27,14 @@ namespace Unitinium
             this(new QueryLexer(), 
                 new QueryParser(), 
                 new Dictionary<Type, IQueryAstVisitor>(), 
+                new RuntimeObjectWrapperService(),
                 SceneManager.GetActiveScene().GetRootGameObjects())
         {
             Visitors[typeof(QueryGlobalAst)] = new QueryGlobalAstVisitor();
             Visitors[typeof(QueryComponentAst)] = new QueryComponentAstVisitor();
             Visitors[typeof(QueryIndexAst)] = new QueryIndexAstVisitor();
             Visitors[typeof(QueryNameAst)] = new QueryNameAstVisitor();
+            Visitors[typeof(QueryFirstExpandAst)] = new QueryFirstExpandAstVisitor();
         }
         
         public object Execute(string query)
@@ -43,7 +48,8 @@ namespace Unitinium
                 result = Visitors[astNode.GetType()].Visit(astNode, result);
             }
             
-            return result;
+            var wrapped = Wrapper.Wrap(result);
+            return wrapped;
         }
     }
 }
