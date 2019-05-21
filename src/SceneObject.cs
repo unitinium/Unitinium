@@ -7,6 +7,7 @@ namespace Unitinium
         public string name { get; set; }
         public object[] components {get;set;}
         public List<SceneNode> childs { get; set; }
+        public int instanceId { get; set; }
 
         public SceneNode()
         {
