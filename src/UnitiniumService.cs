@@ -22,12 +22,12 @@ namespace Unitinium
             SceneDumpService = new SceneDumpService(new RuntimeObjectWrapperService());
 
             Processor = new JsonRpcProcessor();
-            LuaRuntime = new DefaultUnitiniumLuaRuntime();
             QueryService = new SceneQueryService();
+            LuaRuntime = new DefaultUnitiniumLuaRuntime(QueryService);
 
-            Processor.SetMethod("sceneDump", SceneDumpService.DumpScenes);
-            Processor.SetMethod("executeLua", (string script) => { LuaRuntime.Execute(script); return 0; });
-            Processor.SetMethod<string, object>("query", (query) => QueryService.Execute(query));
+            Processor.SetMethod("dump", SceneDumpService.DumpScenes);
+            Processor.SetMethod("execute", (string script) => LuaRuntime.Execute(script));
+            Processor.SetMethod("query", (string query) => QueryService.Execute(query));
             
             server = new JsonRpcServer();
             requests = server.Start("http://localhost:" + ListenPort + "/");

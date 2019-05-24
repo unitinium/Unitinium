@@ -9,22 +9,25 @@ namespace Unitinium
     {
         public Script GlobalScript { get; set; }
 
-        public DefaultUnitiniumLuaRuntime()
+        public DefaultUnitiniumLuaRuntime(IQueryService query)
         {
             GlobalScript = new Script();
 
             UserData.RegisterType<GameObject>();
             UserData.RegisterType<Debug>();
             UserData.RegisterType<Type>();
+            UserData.RegisterType<IQueryService>();
 
             GlobalScript.Globals["GameObject"] = UserData.CreateStatic<GameObject>();
             GlobalScript.Globals["Debug"] = UserData.CreateStatic<Debug>();
             GlobalScript.Globals["Type"] = UserData.CreateStatic<Type>();
+            GlobalScript.Globals["query"] = query;
         }
 
-        public void Execute(string script)
+        public object Execute(string script)
         {
-            GlobalScript.DoString(script);
+            var result = GlobalScript.DoString(script);
+            return result.ToObject();
         }
 
         private void Log(string message)

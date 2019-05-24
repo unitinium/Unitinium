@@ -62,5 +62,20 @@ namespace Unitinium.Tests
             // Assert
             Assert.True(Enumerable.SequenceEqual(output, result));
         }
+
+        [Test]
+        public void Parse_ShouldNormalParseEmpty()
+        {
+            // Arrange
+            var lexer = new QueryLexer();
+            var input = @"";
+            var output = new object[] {};
+
+            // Act
+            var result = lexer.Tokenize(input);
+
+            // Assert
+            Assert.True(Enumerable.SequenceEqual(output, result));
+        }
     }
 }

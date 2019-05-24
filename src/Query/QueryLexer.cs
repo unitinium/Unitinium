@@ -7,7 +7,12 @@ namespace Unitinium
     {
         public object[] Tokenize(string query)
         {
-            if (string.IsNullOrEmpty(query))
+            if (query.Equals(""))
+            {
+                return new object[0];
+            }
+
+            if (query == null)
             {
                 throw new NullReferenceException(query);
             }
