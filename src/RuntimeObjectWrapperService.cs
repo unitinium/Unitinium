@@ -40,7 +40,7 @@ namespace Unitinium
 
             if(value is IEnumerable enumerable)
             {
-                return enumerable.Cast<object>().Select(v => Wrap(v));
+                return enumerable.Cast<object>().Select(v => Wrap(v)).ToList();
             }
 
             if(value is TypeMemberInstance instance)
