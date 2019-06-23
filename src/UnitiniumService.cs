@@ -14,7 +14,7 @@ namespace Unitinium
         private ConcurrentQueue<JsonRpcRequest> requests;
         public JsonRpcProcessor Processor { get; set; }
         public SceneDumpService SceneDumpService { get; set; }
-        public IUnitiniumLuaRuntime LuaRuntime { get; set; }
+        public DefaultUnitiniumLuaRuntime LuaRuntime { get; set; }
         public IQueryService QueryService { get; set; }
 
         public void Awake()
@@ -27,6 +27,8 @@ namespace Unitinium
 
             Processor.SetMethod("dump", SceneDumpService.DumpScenes);
             Processor.SetMethod("execute", (string script) => LuaRuntime.Execute(script));
+            Processor.SetMethod("co_execute", (string script) => LuaRuntime.Execute(script, true));
+            Processor.SetMethod("get_execution", (long id) => LuaRuntime.GetExecution((int)id));
             Processor.SetMethod("query", (string query) => QueryService.Execute(query));
             
             server = new JsonRpcServer();
@@ -35,6 +37,8 @@ namespace Unitinium
 
         void Update()
         {
+            LuaRuntime.UpdateCoroutines();
+
             if (requests.IsEmpty)
             {
                 return;
